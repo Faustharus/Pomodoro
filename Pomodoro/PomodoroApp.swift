@@ -5,6 +5,7 @@
 //  Created by Damien Chailloleau on 19/05/2024.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
@@ -13,5 +14,6 @@ struct PomodoroApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Cycle.self)
     }
 }
