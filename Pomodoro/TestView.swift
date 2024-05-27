@@ -30,7 +30,7 @@ struct TestView: View {
     
     @State private var clockCycle = Clocks()
     
-    @Query var cycles: [Cycle]
+//    @Query var cycles: [Cycle]
     
     @State private var workSecondsElapsed: Int = 0
     @State private var breaktimeSecondsElapsed: Int = 0
@@ -58,15 +58,15 @@ struct TestView: View {
                     TextField("Breaktime Duration", value: $breaktimeSecondsElapsed, format: .number)
                 }
                 
-                Button(action: storeNewClock) {
-                    Text("Setting a New Clock")
-                        .font(.title)
-                        .padding()
-                        .background(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0 ? Color.gray : Color.green)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .disabled(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0)
+//                Button(action: storeNewClock) {
+//                    Text("Setting a New Clock")
+//                        .font(.title)
+//                        .padding()
+//                        .background(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0 ? Color.gray : Color.green)
+//                        .foregroundStyle(.white)
+//                        .clipShape(RoundedRectangle(cornerRadius: 10))
+//                }
+//                .disabled(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0)
                 
                 Button(action: startTimer) {
                     Text(isRunning ? "Running..." : "Start Timer")
@@ -144,11 +144,11 @@ struct TestView: View {
         isRunning = false
     }
     
-    private func storeNewClock() {
-        let newClock = Cycle(breakLength: workSecondsElapsed * 60, workLength: breaktimeSecondsElapsed * 60)
-        modelContext.insert(newClock)
-        dismiss()
-    }
+//    private func storeNewClock() {
+//        let newClock = Cycle(breakLength: workSecondsElapsed * 60, workLength: breaktimeSecondsElapsed * 60)
+//        modelContext.insert(newClock)
+//        dismiss()
+//    }
 }
 
 #Preview {

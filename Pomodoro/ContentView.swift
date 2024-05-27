@@ -12,14 +12,41 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var isRunning: Bool = false
     @State private var isReseting: Bool = false
-    @State private var defaultWorkSecondsLeft: Int = 1 * 60
-    @State private var defaultBreakSecondsLeft: Int = 1 * 60
+    @State private var defaultWorkSecondsLeft: Int = 25 * 60
+    @State private var defaultBreakSecondsLeft: Int = 5 * 60
+    
+    @State private var testValueWork: String = ""
+    @State private var testValueBreak: String = ""
     
     let defaultValue: Int = 25 * 60
     
     var body: some View {
         VStack {
             Text("Hello, World !")
+            
+            TextField("Work Time", text: $testValueWork)
+                .keyboardType(.numberPad)
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .onChange(of: testValueWork) { oldValue, newValue in
+                    if let minutes = Int(newValue) {
+                        defaultWorkSecondsLeft = minutes * 60
+                    } else {
+                        defaultWorkSecondsLeft = defaultValue
+                    }
+                }
+            
+            TextField("Break Time", text: $testValueBreak)
+                .keyboardType(.numberPad)
+                .padding()
+                .textFieldStyle(.roundedBorder)
+                .onChange(of: testValueBreak) { oldValue, newValue in
+                    if let minutes = Int(newValue) {
+                        defaultBreakSecondsLeft = minutes * 60
+                    } else {
+                        defaultBreakSecondsLeft = 5 * 60
+                    }
+                }
             
             if defaultWorkSecondsLeft == 0 {
                 Text("Break Time : \(dynamicBreakClock)")
@@ -87,8 +114,16 @@ extension ContentView {
     func resetClock() {
         timer?.invalidate()
         timer = nil
-        defaultWorkSecondsLeft = 1 * 60
-        defaultBreakSecondsLeft = 1 * 60
+        if let minutes = Int(testValueWork) {
+            defaultWorkSecondsLeft = minutes * 60
+        } else {
+            defaultWorkSecondsLeft = defaultValue
+        }
+        if let minutes = Int(testValueBreak) {
+            defaultBreakSecondsLeft = minutes * 60
+        } else {
+            defaultBreakSecondsLeft = 5 * 60
+        }
         isReseting = false
     }
     
