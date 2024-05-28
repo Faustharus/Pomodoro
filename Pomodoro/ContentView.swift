@@ -19,6 +19,7 @@ struct ContentView: View {
     @State private var testValueBreak: String = ""
     
     let defaultValue: Int = 25 * 60
+    let defaultValueBreak: Int = 5 * 60
     
     var body: some View {
         VStack {
@@ -122,7 +123,7 @@ extension ContentView {
         if let minutes = Int(testValueBreak) {
             defaultBreakSecondsLeft = minutes * 60
         } else {
-            defaultBreakSecondsLeft = 5 * 60
+            defaultBreakSecondsLeft = defaultValueBreak
         }
         isReseting = false
     }
