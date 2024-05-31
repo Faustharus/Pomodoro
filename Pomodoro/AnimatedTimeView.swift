@@ -34,11 +34,11 @@ struct AnimatedTimeView: View {
                         .rotationEffect(.degrees(completionAmount))
                         .onReceive(timer) { _ in
                             if isActivated {
-                                withAnimation(.linear(duration: 0.1)) {
-                                    if completionAmount >= 359 {
-                                        completionAmount = 0
-                                        isActivated = false
-                                    } else {
+                                if completionAmount >= 359 {
+                                    completionAmount = 0
+                                    isActivated = false
+                                } else {
+                                    withAnimation(.linear(duration: 0.1)) {
                                         completionAmount += 1.0
                                     }
                                 }

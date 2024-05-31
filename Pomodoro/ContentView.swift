@@ -12,47 +12,85 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var isRunning: Bool = false
     @State private var isReseting: Bool = false
-    @State private var defaultWorkSecondsLeft: Int = 25 * 60
-    @State private var defaultBreakSecondsLeft: Int = 5 * 60
+    @State private var defaultWorkSecondsLeft: Int = 1 * 60
+    @State private var defaultBreakSecondsLeft: Int = 1 * 60
     
-    @State private var testValueWork: String = ""
-    @State private var testValueBreak: String = ""
+    @State private var secondsValueWork: String = ""
+    @State private var secondsValueBreak: String = ""
     
     let defaultValue: Int = 25 * 60
     let defaultValueBreak: Int = 5 * 60
     
+    @State private var completionAmount: Double = 0.0
+    @State private var isActivated: Bool = false
+    let clock = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+    
     var body: some View {
         VStack {
-            Text("Hello, World !")
-            
-            TextField("Work Time", text: $testValueWork)
+            TextField("Work Time", text: $secondsValueWork)
                 .keyboardType(.numberPad)
-                .padding()
+                .padding(.all, 10)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: testValueWork) { oldValue, newValue in
-                    if let minutes = Int(newValue) {
-                        defaultWorkSecondsLeft = minutes * 60
-                    } else {
-                        defaultWorkSecondsLeft = defaultValue
-                    }
-                }
+//                .onChange(of: secondsValueWork) { oldValue, newValue in
+//                    if let minutes = Int(newValue) {
+//                        defaultWorkSecondsLeft = minutes * 60
+//                    } else {
+//                        defaultWorkSecondsLeft = defaultValue
+//                    }
+//                }
             
-            TextField("Break Time", text: $testValueBreak)
+            TextField("Break Time", text: $secondsValueBreak)
                 .keyboardType(.numberPad)
-                .padding()
+                .padding(.all, 10)
                 .textFieldStyle(.roundedBorder)
-                .onChange(of: testValueBreak) { oldValue, newValue in
-                    if let minutes = Int(newValue) {
-                        defaultBreakSecondsLeft = minutes * 60
-                    } else {
-                        defaultBreakSecondsLeft = 5 * 60
-                    }
-                }
+//                .onChange(of: secondsValueBreak) { oldValue, newValue in
+//                    if let minutes = Int(newValue) {
+//                        defaultBreakSecondsLeft = minutes * 60
+//                    } else {
+//                        defaultBreakSecondsLeft = defaultValueBreak
+//                    }
+//                }
             
-            if defaultWorkSecondsLeft == 0 {
-                Text("Break Time : \(dynamicBreakClock)")
-            } else {
-                Text("Work Time : \(dynamicWorkClock)")
+            ZStack {
+                if defaultWorkSecondsLeft == 0 {
+                    Text("Break Time : \(dynamicBreakClock)")
+                } else {
+                    Text("Work Time : \(dynamicWorkClock)")
+                }
+                Circle()
+                    .stroke(.black.opacity(0.2), lineWidth: 35)
+                    .padding(.all, 30)
+                
+                Circle()
+                    .trim(from: 0, to: CGFloat(completionAmount / 360.0))
+                    .stroke(.orange.opacity(0.9), lineWidth: 35)
+                    .padding(.all, 30)
+                    .rotationEffect(.degrees(-90))
+                
+                VStack {
+                    Circle()
+                        .fill(.red)
+                        .frame(width: 30)
+                        .offset(x: 0, y: -167)
+                        .rotationEffect(.degrees(completionAmount))
+                        .onReceive(clock) { _ in
+                            if isActivated {
+                                if completionAmount >= 359 {
+                                    completionAmount = 0
+                                    isActivated = false
+                                } else {
+                                    withAnimation(.linear(duration: 1.0)) {
+                                        let _ = print("Divided Sec: \(360.0 / Double(defaultWorkSecondsLeft))")
+                                        let _ = print("Sec: \(Double(defaultWorkSecondsLeft))")
+                                        let _ = print("Static: \(360.0 / 60.0)")
+                                        completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+                                        //completionAmount += 360.0 / 60.0
+                                        // FIXME: defaultWorkSec or testValueWork ? - Static Value renders correct synchronization between timer & clock
+                                    }
+                                }
+                            }
+                        }
+                }
             }
             
             Button(isReseting && !isRunning ? "Resume" : "Start") {
@@ -91,9 +129,23 @@ extension ContentView {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
+    func timerClock() {
+//        if isActivated {
+//            if completionAmount >= 359 {
+//                completionAmount = 0
+//                isActivated = false
+//            } else {
+//                withAnimation(.linear(duration: 1.0)) {
+//                    completionAmount += 360.0 / Double(defaultWorkSecondsLeft)
+//                }
+//            }
+//        }
+    }
+    
     func startClock() {
         isRunning = true
         isReseting = false
+        isActivated = true
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { _ in
             if defaultWorkSecondsLeft > 0 {
                 defaultWorkSecondsLeft -= 1
@@ -109,23 +161,26 @@ extension ContentView {
         timer?.invalidate()
         timer = nil
         isRunning = false
+        isActivated = false
         isReseting = true
     }
     
     func resetClock() {
         timer?.invalidate()
         timer = nil
-        if let minutes = Int(testValueWork) {
+        completionAmount = 0.0
+        if let minutes = Int(secondsValueWork) {
             defaultWorkSecondsLeft = minutes * 60
         } else {
             defaultWorkSecondsLeft = defaultValue
         }
-        if let minutes = Int(testValueBreak) {
+        if let minutes = Int(secondsValueBreak) {
             defaultBreakSecondsLeft = minutes * 60
         } else {
             defaultBreakSecondsLeft = defaultValueBreak
         }
         isReseting = false
+        isActivated = false
     }
     
 }
