@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var isRunning: Bool = false
     @State private var isReseting: Bool = false
-    @State private var defaultWorkSecondsLeft: Int = 1 * 60
+    @State private var defaultWorkSecondsLeft: Int = 25 * 60
     @State private var defaultBreakSecondsLeft: Int = 1 * 60
     
     @State private var secondsValueWork: String = ""
@@ -31,25 +31,25 @@ struct ContentView: View {
                 .keyboardType(.numberPad)
                 .padding(.all, 10)
                 .textFieldStyle(.roundedBorder)
-//                .onChange(of: secondsValueWork) { oldValue, newValue in
-//                    if let minutes = Int(newValue) {
-//                        defaultWorkSecondsLeft = minutes * 60
-//                    } else {
-//                        defaultWorkSecondsLeft = defaultValue
-//                    }
-//                }
+                .onChange(of: secondsValueWork) { oldValue, newValue in
+                    if let minutes = Int(newValue) {
+                        defaultWorkSecondsLeft = minutes * 60
+                    } else {
+                        defaultWorkSecondsLeft = defaultValue
+                    }
+                }
             
             TextField("Break Time", text: $secondsValueBreak)
                 .keyboardType(.numberPad)
                 .padding(.all, 10)
                 .textFieldStyle(.roundedBorder)
-//                .onChange(of: secondsValueBreak) { oldValue, newValue in
-//                    if let minutes = Int(newValue) {
-//                        defaultBreakSecondsLeft = minutes * 60
-//                    } else {
-//                        defaultBreakSecondsLeft = defaultValueBreak
-//                    }
-//                }
+                .onChange(of: secondsValueBreak) { oldValue, newValue in
+                    if let minutes = Int(newValue) {
+                        defaultBreakSecondsLeft = minutes * 60
+                    } else {
+                        defaultBreakSecondsLeft = defaultValueBreak
+                    }
+                }
             
             ZStack {
                 if defaultWorkSecondsLeft == 0 {
@@ -77,16 +77,20 @@ struct ContentView: View {
                             if isActivated {
                                 if completionAmount >= 359 {
                                     completionAmount = 0
-                                    isActivated = false
+                                    //isActivated = false
                                 } else {
-                                    withAnimation(.linear(duration: 1.0)) {
-                                        let _ = print("Divided Sec: \(360.0 / Double(defaultWorkSecondsLeft))")
-                                        let _ = print("Sec: \(Double(defaultWorkSecondsLeft))")
-                                        let _ = print("Static: \(360.0 / 60.0)")
-                                        completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
-                                        //completionAmount += 360.0 / 60.0
-                                        // FIXME: defaultWorkSec or testValueWork ? - Static Value renders correct synchronization between timer & clock
+                                    if defaultWorkSecondsLeft == 0 {
+                                        withAnimation(.linear(duration: 1.0)) {
+                                            completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
+                                        }
+                                    } else {
+                                        withAnimation(.linear(duration: 1.0)) {
+                                            completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+                                        }
                                     }
+                                }
+                                if defaultWorkSecondsLeft == 0 && defaultBreakSecondsLeft == 0 {
+                                    self.isActivated = false
                                 }
                             }
                         }
