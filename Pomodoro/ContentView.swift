@@ -77,7 +77,6 @@ struct ContentView: View {
                             if isActivated {
                                 if completionAmount >= 359 {
                                     completionAmount = 0
-                                    //isActivated = false
                                 } else {
                                     if defaultWorkSecondsLeft == 0 {
                                         withAnimation(.linear(duration: 1.0)) {
@@ -133,19 +132,6 @@ extension ContentView {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    func timerClock() {
-//        if isActivated {
-//            if completionAmount >= 359 {
-//                completionAmount = 0
-//                isActivated = false
-//            } else {
-//                withAnimation(.linear(duration: 1.0)) {
-//                    completionAmount += 360.0 / Double(defaultWorkSecondsLeft)
-//                }
-//            }
-//        }
-    }
-    
     func startClock() {
         isRunning = true
         isReseting = false
@@ -154,7 +140,9 @@ extension ContentView {
             if defaultWorkSecondsLeft > 0 {
                 defaultWorkSecondsLeft -= 1
             } else if defaultBreakSecondsLeft > 0 {
-                defaultBreakSecondsLeft -= 1
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    defaultBreakSecondsLeft -= 1
+                }
             } else {
                 stopClock()
             }
