@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AnimatedTimeView: View {
     
+    let model: AnimatedTimeViewItemModel
+    
     @State private var completionAmount = 270.0
     @State private var isActivated: Bool = false
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
@@ -56,5 +58,7 @@ struct AnimatedTimeView: View {
 }
 
 #Preview {
-    AnimatedTimeView()
+    AnimatedTimeView(model: (completionAmount: 270.0, isActivated: false) )
 }
+
+typealias AnimatedTimeViewItemModel = (completionAmount: Double, isActivated: Bool)

@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var isRunning: Bool = false
     @State private var isReseting: Bool = false
     @State private var defaultWorkSecondsLeft: Int = 25 * 60
-    @State private var defaultBreakSecondsLeft: Int = 1 * 60
+    @State private var defaultBreakSecondsLeft: Int = 5 * 60
     
     @State private var secondsValueWork: String = ""
     @State private var secondsValueBreak: String = ""
@@ -25,90 +25,106 @@ struct ContentView: View {
     @State private var isActivated: Bool = false
     let clock = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
+    @State private var isSettingNewTime: Bool = false
+    
     var body: some View {
-        VStack {
-            TextField("Work Time", text: $secondsValueWork)
-                .keyboardType(.numberPad)
-                .padding(.all, 10)
-                .textFieldStyle(.roundedBorder)
-                .onChange(of: secondsValueWork) { oldValue, newValue in
-                    if let minutes = Int(newValue) {
-                        defaultWorkSecondsLeft = minutes * 60
-                    } else {
-                        defaultWorkSecondsLeft = defaultValue
+        NavigationStack {
+            VStack {
+                TextField("Work Time", text: $secondsValueWork)
+                    .keyboardType(.numberPad)
+                    .padding(.all, 10)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: secondsValueWork) { oldValue, newValue in
+                        if let minutes = Int(newValue) {
+                            defaultWorkSecondsLeft = minutes * 60
+                        } else {
+                            defaultWorkSecondsLeft = defaultValue
+                        }
                     }
-                }
-            
-            TextField("Break Time", text: $secondsValueBreak)
-                .keyboardType(.numberPad)
-                .padding(.all, 10)
-                .textFieldStyle(.roundedBorder)
-                .onChange(of: secondsValueBreak) { oldValue, newValue in
-                    if let minutes = Int(newValue) {
-                        defaultBreakSecondsLeft = minutes * 60
-                    } else {
-                        defaultBreakSecondsLeft = defaultValueBreak
+                
+                TextField("Break Time", text: $secondsValueBreak)
+                    .keyboardType(.numberPad)
+                    .padding(.all, 10)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: secondsValueBreak) { oldValue, newValue in
+                        if let minutes = Int(newValue) {
+                            defaultBreakSecondsLeft = minutes * 60
+                        } else {
+                            defaultBreakSecondsLeft = defaultValueBreak
+                        }
                     }
-                }
-            
-            ZStack {
-                if defaultWorkSecondsLeft == 0 {
-                    Text("Break Time : \(dynamicBreakClock)")
-                } else {
-                    Text("Work Time : \(dynamicWorkClock)")
-                }
-                Circle()
-                    .stroke(.black.opacity(0.2), lineWidth: 35)
-                    .padding(.all, 30)
                 
-                Circle()
-                    .trim(from: 0, to: CGFloat(completionAmount / 360.0))
-                    .stroke(.orange.opacity(0.9), lineWidth: 35)
-                    .padding(.all, 30)
-                    .rotationEffect(.degrees(-90))
-                
-                VStack {
+                // TODO: Create the timer as an entire Component to act a whole page. The use of UIPageControl will probably be necessary for the dotted scrollIndicators
+                ZStack {
+                    if defaultWorkSecondsLeft == 0 {
+                        Text("Break Time : \(dynamicBreakClock)")
+                    } else {
+                        Text("Work Time : \(dynamicWorkClock)")
+                    }
                     Circle()
-                        .fill(.red)
-                        .frame(width: 30)
-                        .offset(x: 0, y: -167)
-                        .rotationEffect(.degrees(completionAmount))
-                        .onReceive(clock) { _ in
-                            if isActivated {
-                                if completionAmount >= 359 {
-                                    completionAmount = 0
-                                } else {
-                                    if defaultWorkSecondsLeft == 0 {
-                                        withAnimation(.linear(duration: 1.0)) {
-                                            completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
-                                        }
+                        .stroke(.black.opacity(0.2), lineWidth: 35)
+                        .padding(.all, 30)
+                    
+                    Circle()
+                        .trim(from: 0, to: CGFloat(completionAmount / 360.0))
+                        .stroke(.orange.opacity(0.9), lineWidth: 35)
+                        .padding(.all, 30)
+                        .rotationEffect(.degrees(-90))
+                    
+                    VStack {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 30)
+                            .offset(x: 0, y: -167)
+                            .rotationEffect(.degrees(completionAmount))
+                            .onReceive(clock) { _ in
+                                if isActivated {
+                                    if completionAmount >= 359 {
+                                        completionAmount = 0
                                     } else {
-                                        withAnimation(.linear(duration: 1.0)) {
-                                            completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+                                        if defaultWorkSecondsLeft == 0 {
+                                            withAnimation(.linear(duration: 1.0)) {
+                                                completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
+                                            }
+                                        } else {
+                                            withAnimation(.linear(duration: 1.0)) {
+                                                completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+                                            }
                                         }
                                     }
-                                }
-                                if defaultWorkSecondsLeft == 0 && defaultBreakSecondsLeft == 0 {
-                                    self.isActivated = false
+                                    if defaultWorkSecondsLeft == 0 && defaultBreakSecondsLeft == 0 {
+                                        self.isActivated = false
+                                    }
                                 }
                             }
-                        }
+                    }
+                }
+                
+                // MARK: Buttons
+                Button(isReseting && !isRunning ? "Resume" : "Start") {
+                    startClock()
+                }
+                .buttonStyle(.bordered)
+                
+                Button(isReseting ? "Reset" : "Stop", role: .destructive) {
+                    if isReseting {
+                        resetClock()
+                    } else {
+                        stopClock()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .toolbar {
+                Button {
+                    self.isSettingNewTime.toggle()
+                } label: {
+                    Label("Add", systemImage: "plus")
                 }
             }
-            
-            Button(isReseting && !isRunning ? "Resume" : "Start") {
-                startClock()
+            .sheet(isPresented: $isSettingNewTime) {
+                AddCycleView()
             }
-            .buttonStyle(.bordered)
-            
-            Button(isReseting ? "Reset" : "Stop", role: .destructive) {
-                if isReseting {
-                    resetClock()
-                } else {
-                    stopClock()
-                }
-            }
-            .buttonStyle(.borderedProminent)
         }
     }
 }
