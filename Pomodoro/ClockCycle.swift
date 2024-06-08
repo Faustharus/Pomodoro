@@ -8,9 +8,17 @@
 import SwiftData
 import SwiftUI
 
-struct ClockCycle {
+@Model
+final class ClockCycle {
     var completionAmount: Double
     var workTime: String
     var breakTime: String
     var howManyTimes: String
+    
+    init(completionAmount: Double, workTime: String, breakTime: String, howManyTimes: String) {
+        self.completionAmount = completionAmount
+        self.workTime = workTime
+        self.breakTime = breakTime
+        self.howManyTimes = howManyTimes
+    }
 }

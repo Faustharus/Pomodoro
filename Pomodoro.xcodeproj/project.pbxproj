@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E0C03452C14E5810081CD1F /* ClockTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E0C03442C14E5810081CD1F /* ClockTimer.swift */; };
+		9E1344792C14C7B70076859B /* ClockTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E1344782C14C7B70076859B /* ClockTimerView.swift */; };
 		9E30EB8E2BF9DC6700BFC456 /* PomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */; };
 		9E30EB902BF9DC6700BFC456 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */; };
 		9E30EB922BF9DC6800BFC456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E30EB912BF9DC6800BFC456 /* Assets.xcassets */; };
@@ -41,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9E0C03442C14E5810081CD1F /* ClockTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTimer.swift; sourceTree = "<group>"; };
+		9E1344782C14C7B70076859B /* ClockTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTimerView.swift; sourceTree = "<group>"; };
 		9E30EB8A2BF9DC6700BFC456 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroApp.swift; sourceTree = "<group>"; };
 		9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +114,8 @@
 			children = (
 				9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */,
 				9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */,
+				9E1344782C14C7B70076859B /* ClockTimerView.swift */,
+				9E0C03442C14E5810081CD1F /* ClockTimer.swift */,
 				9EEAD11F2C0F5D6700CA1CED /* AddCycleView.swift */,
 				9E8903CD2C0E5D0F00D937E6 /* ClockCycle.swift */,
 				9EAE84662C135DE000EA37C9 /* Tests */,
@@ -286,12 +292,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E1344792C14C7B70076859B /* ClockTimerView.swift in Sources */,
 				9E30EB902BF9DC6700BFC456 /* ContentView.swift in Sources */,
 				9EAE84682C135E0C00EA37C9 /* ClockPagesView.swift in Sources */,
 				9E8903CE2C0E5D0F00D937E6 /* ClockCycle.swift in Sources */,
 				9E32A06D2C0222A800BBB988 /* TestView.swift in Sources */,
 				9EEAD1202C0F5D6700CA1CED /* AddCycleView.swift in Sources */,
 				9EAE846A2C1369E000EA37C9 /* ClockCycleScreen.swift in Sources */,
+				9E0C03452C14E5810081CD1F /* ClockTimer.swift in Sources */,
 				9E4B9F142C04DAB30042F7ED /* AnimatedTimeView.swift in Sources */,
 				9E30EB8E2BF9DC6700BFC456 /* PomodoroApp.swift in Sources */,
 				9EAE846C2C136B6400EA37C9 /* CustomPageControl.swift in Sources */,

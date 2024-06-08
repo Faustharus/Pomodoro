@@ -20,7 +20,7 @@ final class ClockCycleScreen {
     ]
     
 //    @ObservationIgnored
-    func shouldShowButton() -> Bool {
-        onBoardingModels.count - 1 == tabIndex
-    }
+//    func shouldShowButton() -> Bool {
+//        onBoardingModels.count - 1 == tabIndex
+//    }
 }

@@ -12,13 +12,13 @@ struct ContentView: View {
     @State private var timer: Timer?
     @State private var isRunning: Bool = false
     @State private var isReseting: Bool = false
-    @State private var defaultWorkSecondsLeft: Int = 25 * 60
+    @State private var defaultWorkSecondsLeft: Int = 1 * 60
     @State private var defaultBreakSecondsLeft: Int = 5 * 60
     
     @State private var secondsValueWork: String = ""
     @State private var secondsValueBreak: String = ""
     
-    let defaultValue: Int = 25 * 60
+    let defaultValue: Int = 1 * 60
     let defaultValueBreak: Int = 5 * 60
     
     @State private var completionAmount: Double = 0.0
@@ -53,8 +53,7 @@ struct ContentView: View {
                             defaultBreakSecondsLeft = defaultValueBreak
                         }
                     }
-                
-                // TODO: Create the timer as an entire Component to act a whole page. The use of UIPageControl will probably be necessary for the dotted scrollIndicators
+        
                 ZStack {
                     if defaultWorkSecondsLeft == 0 {
                         Text("Break Time : \(dynamicBreakClock)")
@@ -82,15 +81,18 @@ struct ContentView: View {
                                     if completionAmount >= 359 {
                                         completionAmount = 0
                                     } else {
-                                        if defaultWorkSecondsLeft == 0 {
-                                            withAnimation(.linear(duration: 1.0)) {
-                                                completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
-                                            }
-                                        } else {
-                                            withAnimation(.linear(duration: 1.0)) {
-                                                completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
-                                            }
+                                        withAnimation(.linear(duration: 1.0)) {
+                                            completionAmount += 360.0 / (Double(dynamicWorkClock) ?? 0.0)
                                         }
+//                                        if defaultWorkSecondsLeft == 0 {
+//                                            withAnimation(.linear(duration: 1.0)) {
+//                                                completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
+//                                            }
+//                                        } else {
+//                                            withAnimation(.linear(duration: 1.0)) {
+//                                                completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+//                                            }
+//                                        }
                                     }
                                     if defaultWorkSecondsLeft == 0 && defaultBreakSecondsLeft == 0 {
                                         self.isActivated = false

@@ -72,20 +72,24 @@ struct AddCycleView: View {
             .formStyle(.columns)
             .background(.red)
             .toolbar {
-//                Button {
-//                    dismiss()
-//                } label: {
-//                    Label("Done", systemImage: "xmark")
-//                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Label("Done", systemImage: "xmark.circle")
+                    }
+                }
                 
-//                Button {
-//                    let newTimer = ClockCycle(workTime: secondsValueWork, breakTime: secondsValueBreak, howManyTimes: totalTurn)
-//                    modelContext.insert(newTimer)
-//                    dismiss()
-//                } label: {
-//                    Label("Confirm", systemImage: "doc.badge.plus")
-//                }
-//                .disabled(true)
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        let newTimer = ClockCycle(completionAmount: 0.0, workTime: secondsValueWork, breakTime: secondsValueBreak, howManyTimes: totalTurn)
+                        modelContext.insert(newTimer)
+                        dismiss()
+                    } label: {
+                        Label("Confirm", systemImage: "doc.badge.plus")
+                    }
+                    .disabled(true)
+                }
             }
         }
     }
