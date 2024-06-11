@@ -7,6 +7,9 @@
 
 import Foundation
 
-struct ClockTimer {
-    
+struct ClockTimer: Identifiable, Codable, Equatable, Hashable {
+    var id: String = UUID().uuidString
+    var secondsOfWorkScheduled: String
+    var secondOfBreakScheduled: String
+    var numberOfRuns: String
 }

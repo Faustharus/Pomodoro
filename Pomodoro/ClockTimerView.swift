@@ -13,6 +13,7 @@ struct ClockTimerView: View {
     
     @State private var isSettingNewTime: Bool = false
     @State private var workSecondsElapsed: Int = 1 * 60
+    @State private var breakSecondsElapsed: Int = 1 * 60
     
     @State private var isStarted: Bool = false
     

@@ -18,6 +18,8 @@
 		9E30EBAB2BF9DC6800BFC456 /* PomodoroUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30EBAA2BF9DC6800BFC456 /* PomodoroUITestsLaunchTests.swift */; };
 		9E32A06D2C0222A800BBB988 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32A06C2C0222A800BBB988 /* TestView.swift */; };
 		9E4B9F142C04DAB30042F7ED /* AnimatedTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B9F132C04DAB30042F7ED /* AnimatedTimeView.swift */; };
+		9E618DD62C174DD100162BA4 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E618DD52C174DD100162BA4 /* DataStore.swift */; };
+		9E6721AC2C18D7DC00142108 /* ClockTimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6721AB2C18D7DC00142108 /* ClockTimerViewModel.swift */; };
 		9E8903CE2C0E5D0F00D937E6 /* ClockCycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E8903CD2C0E5D0F00D937E6 /* ClockCycle.swift */; };
 		9EAE84682C135E0C00EA37C9 /* ClockPagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAE84672C135E0C00EA37C9 /* ClockPagesView.swift */; };
 		9EAE846A2C1369E000EA37C9 /* ClockCycleScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EAE84692C1369E000EA37C9 /* ClockCycleScreen.swift */; };
@@ -57,6 +59,8 @@
 		9E30EBAA2BF9DC6800BFC456 /* PomodoroUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		9E32A06C2C0222A800BBB988 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		9E4B9F132C04DAB30042F7ED /* AnimatedTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTimeView.swift; sourceTree = "<group>"; };
+		9E618DD52C174DD100162BA4 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		9E6721AB2C18D7DC00142108 /* ClockTimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockTimerViewModel.swift; sourceTree = "<group>"; };
 		9E8903CD2C0E5D0F00D937E6 /* ClockCycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockCycle.swift; sourceTree = "<group>"; };
 		9EAE84672C135E0C00EA37C9 /* ClockPagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockPagesView.swift; sourceTree = "<group>"; };
 		9EAE84692C1369E000EA37C9 /* ClockCycleScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockCycleScreen.swift; sourceTree = "<group>"; };
@@ -115,7 +119,9 @@
 				9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */,
 				9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */,
 				9E1344782C14C7B70076859B /* ClockTimerView.swift */,
+				9E618DD42C174DC500162BA4 /* Actor */,
 				9E0C03442C14E5810081CD1F /* ClockTimer.swift */,
+				9E6721AB2C18D7DC00142108 /* ClockTimerViewModel.swift */,
 				9EEAD11F2C0F5D6700CA1CED /* AddCycleView.swift */,
 				9E8903CD2C0E5D0F00D937E6 /* ClockCycle.swift */,
 				9EAE84662C135DE000EA37C9 /* Tests */,
@@ -149,6 +155,14 @@
 				9E30EBAA2BF9DC6800BFC456 /* PomodoroUITestsLaunchTests.swift */,
 			);
 			path = PomodoroUITests;
+			sourceTree = "<group>";
+		};
+		9E618DD42C174DC500162BA4 /* Actor */ = {
+			isa = PBXGroup;
+			children = (
+				9E618DD52C174DD100162BA4 /* DataStore.swift */,
+			);
+			path = Actor;
 			sourceTree = "<group>";
 		};
 		9EAE84662C135DE000EA37C9 /* Tests */ = {
@@ -293,6 +307,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E1344792C14C7B70076859B /* ClockTimerView.swift in Sources */,
+				9E6721AC2C18D7DC00142108 /* ClockTimerViewModel.swift in Sources */,
+				9E618DD62C174DD100162BA4 /* DataStore.swift in Sources */,
 				9E30EB902BF9DC6700BFC456 /* ContentView.swift in Sources */,
 				9EAE84682C135E0C00EA37C9 /* ClockPagesView.swift in Sources */,
 				9E8903CE2C0E5D0F00D937E6 /* ClockCycle.swift in Sources */,
