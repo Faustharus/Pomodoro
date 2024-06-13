@@ -5,152 +5,189 @@
 //  Created by Damien Chailloleau on 25/05/2024.
 //
 
-import SwiftData
 import SwiftUI
-
-@Observable
-class Clocks {
-    var clocks = [ClockItem]()
-}
-
-struct ClockItem: Identifiable {
-    var id: String = UUID().uuidString
-    var workLength: Int
-    var breakLength: Int
-}
 
 struct TestView: View {
     
-    @Environment(\.modelContext) var modelContext
-    @Environment(\.dismiss) var dismiss
-    
     @State private var timer: Timer?
-    @State private var secondsElapsed = 25 * 60
-    @State private var isRunning = false
+    @State private var isRunning: Bool = false
+    @State private var isReseting: Bool = false
+    @State private var defaultWorkSecondsLeft: Int = 1 * 60
+    @State private var defaultBreakSecondsLeft: Int = 5 * 60
     
-    @State private var clockCycle = Clocks()
+    @State private var secondsValueWork: String = ""
+    @State private var secondsValueBreak: String = ""
     
-//    @Query var cycles: [Cycle]
+    let defaultValue: Int = 1 * 60
+    let defaultValueBreak: Int = 5 * 60
     
-    @State private var workSecondsElapsed: Int = 0
-    @State private var breaktimeSecondsElapsed: Int = 0
+    @State private var completionAmount: Double = 0.0
+    @State private var isActivated: Bool = false
+    let clock = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
-    private let totalTime = 25 * 60
-    
-//    private let workTime = Number of Minutes for work * 60
-//    private let breaktime = Number of Minutes for break * 60
+    @State private var isSettingNewTime: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
-                ForEach(clockCycle.clocks, id: \.id) { item in
-                    Text("\(item.workLength)")
-                }
-                Text("\(formattedTime)")
-                    .font(.system(size: 72))
-                    .padding()
+                TextField("Work Time", text: $secondsValueWork)
+                    .keyboardType(.numberPad)
+                    .padding(.all, 10)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: secondsValueWork) { oldValue, newValue in
+                        if let minutes = Int(newValue) {
+                            defaultWorkSecondsLeft = minutes * 60
+                        } else {
+                            defaultWorkSecondsLeft = defaultValue
+                        }
+                    }
                 
-                Section("Work Duration") {
-                    TextField("Work Duration", value: $workSecondsElapsed, format: .number)
+                TextField("Break Time", text: $secondsValueBreak)
+                    .keyboardType(.numberPad)
+                    .padding(.all, 10)
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: secondsValueBreak) { oldValue, newValue in
+                        if let minutes = Int(newValue) {
+                            defaultBreakSecondsLeft = minutes * 60
+                        } else {
+                            defaultBreakSecondsLeft = defaultValueBreak
+                        }
+                    }
+        
+                ZStack {
+                    if defaultWorkSecondsLeft == 0 {
+                        Text("Break Time : \(dynamicBreakClock)")
+                    } else {
+                        Text("Work Time : \(dynamicWorkClock)")
+                    }
+                    Circle()
+                        .stroke(.black.opacity(0.2), lineWidth: 35)
+                        .padding(.all, 30)
+                    
+                    Circle()
+                        .trim(from: 0, to: CGFloat(completionAmount / 360.0))
+                        .stroke(.orange.opacity(0.9), lineWidth: 35)
+                        .padding(.all, 30)
+                        .rotationEffect(.degrees(-90))
+                    
+                    VStack {
+                        Circle()
+                            .fill(.red)
+                            .frame(width: 30)
+                            .offset(x: 0, y: -167)
+                            .rotationEffect(.degrees(completionAmount))
+                            .onReceive(clock) { _ in
+                                if isActivated {
+                                    if completionAmount >= 359 {
+                                        completionAmount = 0
+                                    } else {
+                                        if defaultWorkSecondsLeft == 0 {
+                                            withAnimation(.linear(duration: 1.0)) {
+                                                completionAmount += 360.0 / ((Double(secondsValueBreak) ?? 0.0) * 60)
+                                            }
+                                        } else {
+                                            withAnimation(.linear(duration: 1.0)) {
+                                                completionAmount += 360.0 / ((Double(secondsValueWork) ?? 0.0) * 60)
+                                            }
+                                        }
+                                    }
+                                    if defaultWorkSecondsLeft == 0 && defaultBreakSecondsLeft == 0 {
+                                        self.isActivated = false
+                                    }
+                                }
+                            }
+                    }
                 }
                 
-                Section("Breaktime Duration") {
-                    TextField("Breaktime Duration", value: $breaktimeSecondsElapsed, format: .number)
+                // MARK: Buttons
+                Button(isReseting && !isRunning ? "Resume" : "Start") {
+                    startClock()
                 }
+                .buttonStyle(.bordered)
                 
-//                Button(action: storeNewClock) {
-//                    Text("Setting a New Clock")
-//                        .font(.title)
-//                        .padding()
-//                        .background(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0 ? Color.gray : Color.green)
-//                        .foregroundStyle(.white)
-//                        .clipShape(RoundedRectangle(cornerRadius: 10))
-//                }
-//                .disabled(workSecondsElapsed == 0 || breaktimeSecondsElapsed == 0)
-                
-                Button(action: startTimer) {
-                    Text(isRunning ? "Running..." : "Start Timer")
-                        .font(.title)
-                        .padding()
-                        .background(isRunning ? Color.gray : Color.blue)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                Button(isReseting ? "Reset" : "Stop", role: .destructive) {
+                    if isReseting {
+                        resetClock()
+                    } else {
+                        stopClock()
+                    }
                 }
-                .disabled(isRunning)
-                
-                Button(role: .destructive, action: stopTimer) {
-                    Text("Stop")
-                        .font(.title)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
+                .buttonStyle(.borderedProminent)
             }
-            .navigationTitle("Pomodoro")
             .toolbar {
-                Button("Add New Clock", systemImage: "plus") {
-                    let newClock = ClockItem(workLength: workSecondsElapsed * 60, breakLength: breaktimeSecondsElapsed * 60)
-                    clockCycle.clocks.append(newClock)
+                Button {
+                    self.isSettingNewTime.toggle()
+                } label: {
+                    Label("Add", systemImage: "plus")
                 }
             }
-            .onDisappear(perform: stopTimer)
-        }
-    }
-    
-    private var formattedTime: String {
-        var minutes: Int = 0
-        var seconds: Int = 0
-        
-        for item in clockCycle.clocks {
-            let minutesItem = item.workLength / 60
-            let secondsItem = item.breakLength % 60
-            
-            minutes = minutesItem
-            seconds = secondsItem
-        }
-        
-        return String(format: "%02d:%02d", minutes, seconds)
-//        let minutes = secondsElapsed / 60
-//        let seconds = secondsElapsed % 60
-//        return String(format: "%02d:%02d", minutes, seconds)
-    }
-    
-    private func startTimer() {
-        isRunning = true
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-//            if totalTime > secondsElapsed {
-//                secondsElapsed -= 1
-//            } else {
-//                stopTimer()
-//            }
-//            if secondsElapsed < totalTime {
-//                secondsElapsed += 1
-//            } else {
-//                stopTimer()
-//            }
-            if isRunning {
-                var newValue = (formattedTime as NSString).integerValue
-                newValue -= 1
-            } else {
-                stopTimer()
+            .sheet(isPresented: $isSettingNewTime) {
+                //AddCycleView()
             }
         }
     }
-    
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-        isRunning = false
-    }
-    
-//    private func storeNewClock() {
-//        let newClock = Cycle(breakLength: workSecondsElapsed * 60, workLength: breaktimeSecondsElapsed * 60)
-//        modelContext.insert(newClock)
-//        dismiss()
-//    }
 }
 
 #Preview {
     TestView()
+}
+
+// MARK: Computed Properties & Functions
+extension TestView {
+    
+    var dynamicWorkClock: String {
+        let minutes = defaultWorkSecondsLeft / 60
+        let seconds = defaultWorkSecondsLeft % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    var dynamicBreakClock: String {
+        let minutes = defaultBreakSecondsLeft / 60
+        let seconds = defaultBreakSecondsLeft % 60
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func startClock() {
+        isRunning = true
+        isReseting = false
+        isActivated = true
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { _ in
+            if defaultWorkSecondsLeft > 0 {
+                defaultWorkSecondsLeft -= 1
+            } else if defaultBreakSecondsLeft > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    defaultBreakSecondsLeft -= 1
+                }
+            } else {
+                stopClock()
+            }
+        })
+    }
+    
+    func stopClock() {
+        timer?.invalidate()
+        timer = nil
+        isRunning = false
+        isActivated = false
+        isReseting = true
+    }
+    
+    func resetClock() {
+        timer?.invalidate()
+        timer = nil
+        completionAmount = 0.0
+        if let minutes = Int(secondsValueWork) {
+            defaultWorkSecondsLeft = minutes * 60
+        } else {
+            defaultWorkSecondsLeft = defaultValue
+        }
+        if let minutes = Int(secondsValueBreak) {
+            defaultBreakSecondsLeft = minutes * 60
+        } else {
+            defaultBreakSecondsLeft = defaultValueBreak
+        }
+        isReseting = false
+        isActivated = false
+    }
+    
 }
