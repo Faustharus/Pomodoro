@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9E22F96A2C2AA3A200E14400 /* ContentView-ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E22F9692C2AA3A200E14400 /* ContentView-ViewModel.swift */; };
 		9E30EB8E2BF9DC6700BFC456 /* PomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */; };
 		9E30EB902BF9DC6700BFC456 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */; };
 		9E30EB922BF9DC6800BFC456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E30EB912BF9DC6800BFC456 /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9E22F9692C2AA3A200E14400 /* ContentView-ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView-ViewModel.swift"; sourceTree = "<group>"; };
 		9E30EB8A2BF9DC6700BFC456 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroApp.swift; sourceTree = "<group>"; };
 		9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			children = (
 				9E30EB8D2BF9DC6700BFC456 /* PomodoroApp.swift */,
 				9E30EB8F2BF9DC6700BFC456 /* ContentView.swift */,
+				9E22F9692C2AA3A200E14400 /* ContentView-ViewModel.swift */,
 				9E43EF372C1B533800F814E1 /* Enum */,
 				9E618DD42C174DC500162BA4 /* Actor */,
 				9EAE84662C135DE000EA37C9 /* FunctionnalityTest */,
@@ -309,6 +312,7 @@
 				9E6721AE2C18D89F00142108 /* DataFetchPhase.swift in Sources */,
 				9EAE846A2C1369E000EA37C9 /* ClockCycleScreen.swift in Sources */,
 				9E4B9F142C04DAB30042F7ED /* AnimatedTimeView.swift in Sources */,
+				9E22F96A2C2AA3A200E14400 /* ContentView-ViewModel.swift in Sources */,
 				9E30EB8E2BF9DC6700BFC456 /* PomodoroApp.swift in Sources */,
 				9EAE846C2C136B6400EA37C9 /* CustomPageControl.swift in Sources */,
 			);
